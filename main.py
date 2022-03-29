@@ -5,5 +5,9 @@ from urllib.parse import urlparse
 
 load_dotenv()
 URL = os.getenv("URL")
+if URL is None: URL = "http://freemanmoore.net"
 
-# Crawler.crawl(URL)
+print('here')
+Crawler.options(filter_mode='strict', url_list=[URL])
+Crawler.crawl(URL)
+print('here')

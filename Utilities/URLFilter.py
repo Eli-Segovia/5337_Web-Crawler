@@ -21,30 +21,34 @@ class URLFilter:
         self.allowed = set()
         self.mode = None
 
-    def configure_urls(self, url_list, mode):
+    def configure_urls(self, url_list: list[str], mode: str):
         if mode == 'open':
             # allowed should be cleared. not needed.
             if len(self.allowed) != 0:
                 self.allowed.clear()
+
             # throw any provided url into restricted set
-            self.restrict_urls(url_list)
+            add_url_to_set(url_list, self.restricted)
 
         elif mode == 'strict':
             # throw any domain into the allowed set.
+            # TODO need to grab domain name only from this list...
            add_url_to_set(url_list, self.allowed)
 
         else:
-            raise ValueError("Mode can only be 'restrict' or 'allow'")
+            raise ValueError("Mode must be set to be 'strict' or 'open'")
         # set member mode to appropriate mode
         self.mode = mode
 
     def restrict_urls(self, url_list):
         add_url_to_set(url_list, self.restricted)
     
-    def is_allowed(self, url):
-        if self.mode == 'allow':
-            return url in self.allowed
-        elif self.mode == 'restrict':
+    def allows(self, url):
+        print(self.allowed)
+        if self.mode == 'strict':
+            domain = urlparse(url).hostname
+            return domain in self.allowed and url not in self.restricted
+        elif self.mode == 'open':
             return url not in self.restricted
         else:
-            raise ValueError("Mode can only be 'restrict' or 'allow'")
+            raise ValueError("Mode must be set to be 'strict' or 'open'")

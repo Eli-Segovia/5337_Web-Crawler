@@ -24,8 +24,6 @@ class URLFrontier:
     Pops the first in queue and returns it
     '''
     def visit_next(self):
-        try:
-            url = self.frontier.get()
-        except Empty:
-            url = None
-        return url
+        if not self.frontier.empty:
+            return self.frontier.get()
+        return None
