@@ -1,10 +1,8 @@
 from dotenv import load_dotenv
 import os
-from Utilities.URLFrontier import URLFrontier
+from Crawler import Crawler
 
 load_dotenv()
 URL = os.getenv("URL")
-frontier = URLFrontier(["www.google.com"])
 
-print(frontier.visit_next())
-
+Crawler.crawl(URL)
