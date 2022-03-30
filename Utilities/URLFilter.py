@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+from urllib.robotparser import RobotFileParser
 
 '''
 Maintains state as to which URLs are allowed or restricted
@@ -10,9 +11,15 @@ if in "open" mode, then we can visit any url EXCEPT for what is provided in
 the restricted set. the allowed set is ignored.
 '''
 
-def add_url_to_set(url_list: list[str], target_set: set[str]):
+
+def add_url_to_set(url_list: list[str], target_set: set[str], domain_only=False):
     for url in url_list:
+        if domain_only:
+            url = urlparse(url).hostname
+            if url is None:
+                continue
         target_set.add(url)
+
 
 class URLFilter:
 
@@ -20,6 +27,10 @@ class URLFilter:
         self.restricted = set()
         self.allowed = set()
         self.mode = None
+
+    '''
+    Configures the urls that are restricted/allowed
+    '''
 
     def configure_urls(self, url_list: list[str], mode: str):
         if mode == 'open':
@@ -33,7 +44,7 @@ class URLFilter:
         elif mode == 'strict':
             # throw any domain into the allowed set.
             # TODO need to grab domain name only from this list...
-           add_url_to_set(url_list, self.allowed)
+            add_url_to_set(url_list, self.allowed, domain_only=True)
 
         else:
             raise ValueError("Mode must be set to be 'strict' or 'open'")
@@ -42,13 +53,16 @@ class URLFilter:
 
     def restrict_urls(self, url_list):
         add_url_to_set(url_list, self.restricted)
-    
+
     def allows(self, url):
-        print(self.allowed)
+        parsed = urlparse(url)
+        robot = RobotFileParser()
+        robot.set_url(f'{parsed.scheme}://{parsed.hostname}/robots.txt')
+        robot.read()
+        robot_allowed = robot.can_fetch('*', url)
         if self.mode == 'strict':
-            domain = urlparse(url).hostname
-            return domain in self.allowed and url not in self.restricted
+            return parsed.hostname in self.allowed and url not in self.restricted and robot_allowed
         elif self.mode == 'open':
-            return url not in self.restricted
+            return url not in self.restricted and robot_allowed
         else:
             raise ValueError("Mode must be set to be 'strict' or 'open'")
