@@ -1,0 +1,18 @@
+Pages indexed: 2
+Indexed Pages:
+1: {'title': 'Freeman Moore - SMU Spring 2020', 'id': 2, 'url': 'http://freemanmoore.net', 'date': 'Thu, 01 Apr 2021 15:16:29 GMT', 'size': 2136}
+2: {'title': 'SMU CS 5337/7337 Spring 2020 Schedule', 'id': 1, 'url': 'http://freemanmoore.net/schedule.htm', 'date': 'Thu, 06 May 2021 19:03:23 GMT', 'size': 5607}
+
+
+Outgoing Links:
+1: http://www.gedpage.com/soundex.html
+2: http://lyle.smu.edu
+
+
+Broken Links:
+
+
+Non-text Files:
+
+
+Words Indexed: 147
